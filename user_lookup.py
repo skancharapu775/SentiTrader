@@ -27,18 +27,15 @@ bearer_token = os.environ.get("BEARER_TOKEN")
 
 
 def create_url():
-    tweet_fields = "tweet.fields=lang,author_id"
-    # Tweet fields are adjustable.
-    # Options include:
-    # attachments, author_id, context_annotations,
-    # conversation_id, created_at, entities, geo, id,
-    # in_reply_to_user_id, lang, non_public_metrics, organic_metrics,
-    # possibly_sensitive, promoted_metrics, public_metrics, referenced_tweets,
-    # source, text, and withheld
-    ids = "ids=1278747501642657792,1255542774432063488"
-    # You can adjust ids to include a single Tweets.
-    # Or you can add to up to 100 comma-separated IDs
-    url = "https://api.twitter.com/2/tweets?{}&{}".format(ids, tweet_fields)
+    # Specify the usernames that you want to lookup below
+    # You can enter up to 100 comma-separated values.
+    usernames = "usernames=TwitterDev,TwitterAPI"
+    user_fields = "user.fields=description,created_at"
+    # User fields are adjustable, options include:
+    # created_at, description, entities, id, location, name,
+    # pinned_tweet_id, profile_image_url, protected,
+    # public_metrics, url, username, verified, and withheld
+    url = "https://api.twitter.com/2/users/by?{}&{}".format(usernames, user_fields)
     return url
 
 
@@ -48,12 +45,12 @@ def bearer_oauth(r):
     """
 
     r.headers["Authorization"] = f"Bearer {bearer_token}"
-    r.headers["User-Agent"] = "v2TweetLookupPython"
+    r.headers["User-Agent"] = "v2UserLookupPython"
     return r
 
 
 def connect_to_endpoint(url):
-    response = requests.request("GET", url, auth=bearer_oauth)
+    response = requests.request("GET", url, auth=bearer_oauth,)
     print(response.status_code)
     if response.status_code != 200:
         raise Exception(
@@ -72,6 +69,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
